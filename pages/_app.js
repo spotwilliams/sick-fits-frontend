@@ -6,11 +6,11 @@ class MyApp extends App {
         const {Component} = this.props;
 
         return (
-            <Container>
+            <div className="antialiased bg-red-200">
                 <Page>
                     <Component />
                 </Page>
-            </Container>
+            </div>
         );
     }
 }

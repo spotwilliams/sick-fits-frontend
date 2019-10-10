@@ -1,3 +1,4 @@
+import '../assets/style.css';
 
 const Home = props => (
     <div>

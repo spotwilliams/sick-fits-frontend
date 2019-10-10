@@ -1,8 +1,11 @@
 import Link from 'next/link';
-import NavStyles from "./styles/NavStyles";
 
 const Nav = () => (
-    <NavStyles>
+    <nav>
+        <ul className="flex">
+
+        </ul>
+
         <Link href="/items">
             <a>Items</a>
         </Link>
@@ -18,7 +21,7 @@ const Nav = () => (
         <Link href="/sme">
             <a>Account</a>
         </Link>
-    </NavStyles>
+    </nav>
 );
 
 export default Nav;
