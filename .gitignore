@@ -1,2 +1,10 @@
 .idea/
 node_modules/
+.DS_Store
+*.log
+haters/
+.next/
+.build/
+layout.md
+variables.env
+.env
