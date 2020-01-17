@@ -4,6 +4,8 @@ import { ApolloProvider } from "react-apollo";
 import withData from "../lib/withData";
 
 class MyApp extends App {
+  // getInitialProps is a nextJs life cycle methods.
+  // this tweak is useful to keep the URL query when for example paginate
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
     if (Component.getInitialProps) {
