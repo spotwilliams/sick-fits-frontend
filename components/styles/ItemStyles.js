@@ -12,6 +12,10 @@ const Item = styled.div`
     height: 400px;
     object-fit: cover;
   }
+  img.preview {
+    height: 200px;
+    object-fit: contain;
+}
   p {
     font-size: 12px;
     line-height: 2;
