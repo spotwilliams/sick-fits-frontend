@@ -40,7 +40,7 @@ class Items extends Component {
                         if (error) return <p>error.message</p>;
 
                         return <ItemsList>
-                            {data.items.map(item => <Item item={item}/>)}
+                            {data.items.map(item => <Item item={item} key={item.id}/>)}
                         </ItemsList>;
                     }}
                 </Query>

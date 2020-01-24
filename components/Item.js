@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
+import Link from 'next/link';
 import Title from "./styles/Title";
 import ItemStyles from './styles/ItemStyles'
 import PriceTag from "./styles/PriceTag";
+import formatMoney from "../lib/formatMoney";
 
 class Item extends Component {
 
@@ -15,7 +17,34 @@ class Item extends Component {
 
         return (
             <ItemStyles>
-                <Title>{item.title}</Title>
+                {/* Showing the image */}
+                {item.image && <img src={item.image} alt={item.title}/>}
+
+                {/* Showing the title */}
+                <Title>
+                    <Link href={{
+                        pathname: '/item',
+                        query: {id: item.id}
+                    }}>
+                        <a>{item.title}</a>
+                    </Link>
+                </Title>
+
+                {/* Showing the price */}
+                <PriceTag>{formatMoney(item.price)}</PriceTag>
+                <p>{item.description}</p>
+
+                {/* Showing the Button ops */}
+                <div className="buttonList">
+                    <Link href={{
+                        pathname: '/update',
+                        query: {id: item.id}
+                    }}>
+                        <a>Edit &#9997;</a>
+                    </Link>
+                    <button>Add To Cart</button>
+                    <button>Delete</button>
+                </div>
             </ItemStyles>
         );
     }
