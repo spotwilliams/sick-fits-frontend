@@ -151,7 +151,7 @@ class CreateItem extends Component {
 
                 </Mutation>
                 <ItemStyles>
-                    {preview && <img src={image} className="preview" alt={title}/>}
+                    {preview && <img src={image} alt={title}/>}
                 </ItemStyles>
             </div>
         );
