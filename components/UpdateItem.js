@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import gql from "graphql-tag";
-import {Mutation} from "react-apollo";
+import {Mutation, Query} from "react-apollo";
 import Router from "next/router";
 
 import Form from "./styles/Form";
@@ -9,38 +9,45 @@ import SickButton from "./styles/SickButton";
 import {cloudinary_endpoint, cloudinary_preset} from "../config";
 import ItemStyles from './styles/ItemStyles'
 
+const SINGLE_ITEM_QUERY = gql`
+    query SINGLE_ITEM_QUERY ($id: ID!) {
+        item(where: {id: $id}) {
+            id
+            title
+            description
+            price
+            image
+            largeImage
+        }
+    }
+`;
+
 // This the `function` used to bing in front
 const UPDATE_ITEM_MUTATION = gql`
-  # this is the tag name
-  mutation UPDATE_ITEM_GQL_TAG(
-    $title: String!
-    $description: String!
-    $price: Float!
-    $image: String
-    $largeImage: String
-  ) {
-    # this is the real mutation on the server side
-    updateItem(
-      title: $title
-      description: $description
-      image: $image
-      largeImage: $largeImage
-      price: $price
+    # this is the tag name
+    mutation UPDATE_ITEM_GQL_TAG(
+        $id: ID!
+        $title: String
+        $description: String
+        $price: Float
     ) {
-      id
+        # this is the real mutation on the server side
+        updateItem(
+            id: $id
+            title: $title
+            description: $description
+            price: $price
+        ) {
+            id
+            title
+            description
+            price
+        }
     }
-  }
 `;
 
 class UpdateItem extends Component {
-    state = {
-        title: "Shoes",
-        description: "Nice shoes in my garden",
-        image: "https://res.cloudinary.com/defjbkqa0/image/upload/v1579899756/sickouts/pgk7hubut2hme2k82s6b.jpg",
-        largeImage: "none",
-        preview: true,
-        price: 1200
-    };
+    state = {};
 
     handleChange = e => {
         const {name, type, value} = e.target;
@@ -49,78 +56,84 @@ class UpdateItem extends Component {
         this.setState({[name]: val});
     };
 
+    updateItem = async (e, updateItemMutation) => {
+        e.preventDefault();
+        const response = await updateItemMutation({
+            variables: {
+                id: this.props.id,
+                ...this.state,
+            }
+        });
+
+        console.log(response);
+    }
+
     render() {
-        const {image, title, preview} = this.state;
+        const {image, title} = this.state;
         return (
             <div style={{display: "flex"}}>
-                <Mutation mutation={UPDATE_ITEM_MUTATION} variables={this.state}>
-                    {(createItem, {loading, error}) => (
-                        <Form
-                            onSubmit={async e => {
-                                // Do not submit by default. Using async approach
-                                e.preventDefault();
-                                // call the mutation
-                                const response = await createItem();
-                                // Redirect to the view page
-                                Router.push({
-                                    pathname: "/item",
-                                    query: {id: response.data.createItem.id}
-                                });
-                            }}
-                        >
-                            <ErrorMessage error={error}/>
-                            <fieldset disabled={loading} aria-busy={loading}>
-                                <label htmlFor="title">
-                                    Title
-                                    <input
-                                        type="text"
-                                        id="title"
-                                        name="title"
-                                        placeholder="Title"
-                                        required
-                                        value={this.state.title}
-                                        onChange={this.handleChange}
-                                    />
-                                </label>
+                <Query query={SINGLE_ITEM_QUERY} variables={{id: this.props.id}}>
+                    {({data, loading}) => {
+                        if (loading) return <p>Loading...</p>;
+                        if (!data.item) return <p>You're trying to access data that not exists</p>
+                        return (
+                            <Mutation mutation={UPDATE_ITEM_MUTATION} variables={this.state}>
+                                {(updateItem, {loading, error}) => (
+                                    <Form
+                                        onSubmit={e => this.updateItem(e, updateItem)}
+                                    >
+                                        <ErrorMessage error={error}/>
+                                        <fieldset disabled={loading} aria-busy={loading}>
+                                            <label htmlFor="title">
+                                                Title
+                                                <input
+                                                    type="text"
+                                                    id="title"
+                                                    name="title"
+                                                    placeholder="Title"
+                                                    required
+                                                    defaultValue={data.item.title}
+                                                    onChange={this.handleChange}
+                                                />
+                                            </label>
 
-                                <label htmlFor="price">
-                                    Price
-                                    <input
-                                        type="number"
-                                        id="price"
-                                        name="price"
-                                        placeholder="Price"
-                                        required
-                                        min="0"
-                                        value={this.state.price}
-                                        onChange={this.handleChange}
-                                    />
-                                </label>
+                                            <label htmlFor="price">
+                                                Price
+                                                <input
+                                                    type="number"
+                                                    id="price"
+                                                    name="price"
+                                                    placeholder="Price"
+                                                    required
+                                                    min="0"
+                                                    defaultValue={data.item.price}
+                                                    onChange={this.handleChange}
+                                                />
+                                            </label>
 
-                                <label htmlFor="description">
-                                    Description
-                                    <textarea
-                                        id="description"
-                                        name="description"
-                                        placeholder="Description"
-                                        required
-                                        value={this.state.description}
-                                        onChange={this.handleChange}
-                                    />
-                                </label>
-                            </fieldset>
-                            <SickButton type="submit">Submit</SickButton>
-                        </Form>
-                    )}
-
-                </Mutation>
-                <ItemStyles>
-                    {preview && <img src={image} alt={title}/>}
-                </ItemStyles>
+                                            <label htmlFor="description">
+                                                Description
+                                                <textarea
+                                                    id="description"
+                                                    name="description"
+                                                    placeholder="Description"
+                                                    required
+                                                    defaultValue={data.item.description}
+                                                    onChange={this.handleChange}
+                                                />
+                                            </label>
+                                        </fieldset>
+                                        <SickButton type="submit">Sav{loading ? 'ing': 'e'} Changes</SickButton>
+                                    </Form>
+                                )}
+                            </Mutation>
+                        )
+                    }}
+                </Query>
             </div>
         );
     }
 }
 
 export default UpdateItem;
-export {UPDATE_ITEM_MUTATION };
+export {UPDATE_ITEM_MUTATION};
