@@ -1,26 +1,10 @@
 import React, {Component} from "react";
 import gql from "graphql-tag";
 import {Mutation, Query} from "react-apollo";
-import Router from "next/router";
-
 import Form from "./styles/Form";
 import ErrorMessage from "./styles/ErrorMessage";
 import SickButton from "./styles/SickButton";
-import {cloudinary_endpoint, cloudinary_preset} from "../config";
-import ItemStyles from './styles/ItemStyles'
-
-const SINGLE_ITEM_QUERY = gql`
-    query SINGLE_ITEM_QUERY ($id: ID!) {
-        item(where: {id: $id}) {
-            id
-            title
-            description
-            price
-            image
-            largeImage
-        }
-    }
-`;
+import {SINGLE_ITEM_QUERY} from  './queries/SINGLE_ITEM_QUERY'
 
 // This the `function` used to bing in front
 const UPDATE_ITEM_MUTATION = gql`
@@ -136,4 +120,3 @@ class UpdateItem extends Component {
 }
 
 export default UpdateItem;
-export {UPDATE_ITEM_MUTATION};
