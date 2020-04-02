@@ -1,9 +1,10 @@
 import Items from "../components/Items";
+import { Query } from "react-apollo";
 
-const Home = props => (
-    <div>
-        <Items />
-    </div>
+const Index = (props) => (
+  <div>
+    <Items page={parseFloat(props.query.page || 1)} />
+  </div>
 );
 
-export default Home;
+export default Index;
