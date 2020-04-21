@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Item from "./Item";
 import { ALL_ITEMS_QUERY } from "./queries/ALL_ITEMS_QUERY";
 import Pagination from "./Pagination";
+import { perPage } from "../config";
 
 const Center = styled.div`
   text-align: center;
@@ -23,7 +24,12 @@ class Items extends Component {
     return (
       <Center>
         <Pagination page={this.props.page} />
-        <Query query={ALL_ITEMS_QUERY}>
+        <Query
+          query={ALL_ITEMS_QUERY}
+          variables={{
+            first: perPage,
+            skip: this.props.page * perPage - perPage,
+          }}>
           {({ data, error, loading }) => {
             if (loading) return <p>Loading...</p>;
             if (error) return <p>error.message</p>;
