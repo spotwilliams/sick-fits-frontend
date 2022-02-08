@@ -1,8 +1,8 @@
-import gql from "graphql-tag";
 import { useQuery } from "@apollo/client";
 import DisplayError from "./ErrorMessage";
 import Head from "next/head";
 import styled from "styled-components";
+import PRODUCT_VIEW_QUERY from "./queries/ProductViewQuery";
 
 const ProductStyles = styled.div`
   display: grid;
@@ -16,29 +16,6 @@ const ProductStyles = styled.div`
     width: 100%;
     height: 100%;
     object-fit: contain;
-  }
-`;
-
-const PRODUCT_VIEW_QUERY = gql`
-  query PRODUCT_VIEW($id: ID!) {
-    Product(where: { id: $id }) {
-      id
-      name
-      description
-      status
-      photo {
-        id
-        altText
-        image {
-          id
-          path
-          filename
-          publicUrl
-          publicUrlTransformed
-        }
-      }
-      price
-    }
   }
 `;
 
