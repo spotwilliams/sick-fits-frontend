@@ -27,17 +27,19 @@ export default function Pagination({ page }) {
     <PaginationStyles>
       <Head>
         <title>
-          {appName} - Página {page} de ___
+          {appName} - Page {page} of {pageCount}
         </title>
       </Head>
 
       <Link href={`/products/${page - 1}`}>
         <a aria-disabled={page <= 1}>⟵Prev</a>
       </Link>
-      <p> Page of {pageCount}</p>
+      <p>
+        Page {page} of {pageCount}
+      </p>
       <p>{count} Items total</p>
-      <Link href={`/products/${page + 1}`} aria-disabled={true}>
-        Next ⟶
+      <Link href={`/products/${page + 1}`}>
+        <a aria-disabled={page >= pageCount}>Next ⟶</a>
       </Link>
     </PaginationStyles>
   );
