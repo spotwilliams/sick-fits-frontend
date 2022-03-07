@@ -1,3 +1,3 @@
 export default function AccountPage() {
-  return <p>Accounts!</p>;
+  return <p>Come back later!</p>;
 }
