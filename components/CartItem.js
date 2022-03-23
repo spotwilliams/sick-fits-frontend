@@ -32,7 +32,7 @@ export default function CartItem({ product }) {
     <CartItemStyles>
       <img
         width="100"
-        src={product.photo.image.publicUrlTransformed}
+        src={product.photos[0]?.image.publicUrlTransformed}
         alt={product.name}
       />
       <div>

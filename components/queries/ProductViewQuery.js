@@ -7,7 +7,7 @@ const PRODUCT_VIEW_QUERY = gql`
       name
       description
       status
-      photo {
+      photos {
         id
         altText
         image {
