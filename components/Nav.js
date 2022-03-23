@@ -3,8 +3,11 @@ import NavStyles from "./styles/NavStyles";
 import { useCart } from "../lib/cartState";
 import CartCount from "./CartCount";
 import { useEffect, useState } from "react";
+import { useUser } from "./User";
+import SignOut from "./SignOut";
 
 export default function Nav() {
+  const user = useUser();
   const { openCart, cartItems } = useCart();
 
   const [cartItemsCount, setCartItemsCount] = useState(0);
@@ -22,7 +25,17 @@ export default function Nav() {
   }, [cartItemsValues]);
   return (
     <NavStyles>
-      <Link href="/sell">Vender</Link>
+      {user && (
+        <>
+          <Link href="/sell">Vender</Link>
+          <SignOut />
+        </>
+      )}
+      {!user && (
+        <>
+          <Link href="/signin">Sign In</Link>
+        </>
+      )}
 
       <button onClick={openCart}>
         🛒
