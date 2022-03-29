@@ -71,10 +71,9 @@ export default function CreateProduct() {
       },
     });
 
-    console.log({ uploadData });
     setImages({
       ...images,
-      [field]: uploadData.createProductImage.id,
+      [field]: res?.data?.createProductImage?.id,
     });
   }
 
