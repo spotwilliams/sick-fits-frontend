@@ -104,7 +104,7 @@ export default function CreateProduct() {
         });
       }}
     >
-      <DisplayError error={error} />
+      <DisplayError error={error || uploadError} />
       <fieldset
         disabled={loading || uploadLoading}
         aria-busy={loading || uploadLoading}

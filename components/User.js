@@ -16,7 +16,13 @@ const CURRENT_USER_QUERY = gql`
 export function useUser() {
   const { data } = useQuery(CURRENT_USER_QUERY);
   const { localUser } = useLocalUser();
-  return data?.authenticatedItem || localUser;
+
+  const authUser = data?.authenticatedItem;
+  if (authUser) return authUser;
+
+  if (localUser?.name || localUser?.email) return localUser;
+
+  return undefined;
 }
 
 export { CURRENT_USER_QUERY };
