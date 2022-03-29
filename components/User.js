@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import { useLocalUser } from "../lib/userState";
 
 const CURRENT_USER_QUERY = gql`
   query {
@@ -14,7 +15,8 @@ const CURRENT_USER_QUERY = gql`
 
 export function useUser() {
   const { data } = useQuery(CURRENT_USER_QUERY);
-  return data?.authenticatedItem;
+  const { localUser } = useLocalUser();
+  return data?.authenticatedItem || localUser;
 }
 
 export { CURRENT_USER_QUERY };

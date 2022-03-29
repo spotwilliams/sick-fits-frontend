@@ -4,6 +4,7 @@ import Form from "./styles/Form";
 import useForm from "../lib/useForm";
 import { CURRENT_USER_QUERY } from "./User";
 import Error from "./ErrorMessage";
+import { useLocalUser } from "../lib/userState";
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -24,6 +25,7 @@ const SIGNIN_MUTATION = gql`
 `;
 
 export default function SignIn() {
+  const { setLocalUser } = useLocalUser();
   const { inputs, handleChange, resetForm } = useForm({
     email: "",
     password: "",
@@ -36,6 +38,12 @@ export default function SignIn() {
   async function handleSubmit(e) {
     e.preventDefault(); // stop the form from submitting
     const res = await signin();
+
+    const user = {
+      name: res?.data?.authenticateUserWithPassword?.item?.name,
+      email: res?.data?.authenticateUserWithPassword?.item?.email,
+    };
+    setLocalUser(user);
     resetForm();
     // Send the email and password to the graphqlAPI
   }
