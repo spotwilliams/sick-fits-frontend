@@ -8,8 +8,20 @@ import calcTotalPrice from "../lib/calcTotalPrice";
 import styled from "styled-components";
 import SickButton from "./styles/SickButton";
 import { useState } from "react";
+import CheckoutStyles from "./styles/CheckoutStyles";
+import DisplayError from "./ErrorMessage";
 
-function sendOrder(cartItems, who) {
+function sendOrder(
+  cartItems,
+  who,
+  setCheckout,
+  setCheckoutOpen,
+  setCheckoutError
+) {
+  setCheckout("");
+  setCheckoutOpen(false);
+  setCheckoutError(null);
+
   let message = `Hola, soy ${who}, quiero reservar los siguientes items: \n`;
 
   cartItems.forEach((item) => {
@@ -23,7 +35,13 @@ function sendOrder(cartItems, who) {
   const url = `https://api.whatsapp.com/send?phone=5491136346935&text=${encodeURIComponent(
     message
   )}`;
-  console.log(url);
+  console.log({ who });
+  if (who !== "" && who !== null && who !== undefined) {
+    setCheckout(url);
+    setCheckoutOpen(true);
+  } else {
+    setCheckoutError({ message: "Necesitamos tu nombre antes de seguir" });
+  }
 }
 
 const CheckoutFormStyles = styled.div`
@@ -57,28 +75,68 @@ const CheckoutFormStyles = styled.div`
       border: 1px solid #ff000070;
     }
   }
+
+  input {
+    margin-left: 10px;
+    height: 40px;
+  }
 `;
 
 function Checkout({ cartItems }) {
   const [who, setWho] = useState("");
+  const [checkout, setCheckout] = useState("");
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [checkoutError, setCheckoutError] = useState(undefined);
   return (
-    <CheckoutFormStyles>
-      <fieldset>
-        <label htmlFor="who">
-          Decinos tu nombre
-          <input
-            id="who"
-            name="who"
-            type="text"
-            value={who}
-            onChange={(e) => {
-              setWho(e.target.value);
-            }}
-          />
-        </label>
-        <button onClick={() => sendOrder(cartItems, who)}>Enviar pedido</button>
-      </fieldset>
-    </CheckoutFormStyles>
+    <>
+      <DisplayError error={checkoutError} />
+      <CheckoutFormStyles>
+        <fieldset>
+          <label htmlFor="who">
+            Decinos tu nombre
+            <input
+              id="who"
+              name="who"
+              type="text"
+              value={who}
+              onChange={(e) => {
+                setWho(e.target.value);
+              }}
+            />
+          </label>
+          <button
+            onClick={() =>
+              sendOrder(
+                cartItems,
+                who,
+                setCheckout,
+                setCheckoutOpen,
+                setCheckoutError
+              )
+            }
+          >
+            Enviar pedido
+          </button>
+        </fieldset>
+      </CheckoutFormStyles>
+      <CheckoutStyles open={checkoutOpen}>
+        <div>
+          <header>
+            <CloseButton
+              onClick={() => {
+                setCheckoutOpen(!checkoutOpen);
+              }}
+            >
+              &times;
+            </CloseButton>
+            <p>Hacé click en el siguiente link y completá el pedido!</p>
+          </header>
+          <a href={checkout} target="_blank">
+            <Supreme>Whatsapp</Supreme>
+          </a>
+        </div>
+      </CheckoutStyles>
+    </>
   );
 }
 

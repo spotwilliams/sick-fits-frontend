@@ -4,8 +4,11 @@ import Link from "next/link";
 import PriceTag from "./styles/PriceTag";
 import formatMoney from "../lib/formatMoney";
 import AddToCartButton from "./AddToCartButton";
+import { useUser } from "./User";
 
 export default function ProductItemList({ product }) {
+  const user = useUser();
+
   return (
     <ItemStyles>
       <Link href={`/product/${product.id}`}>
@@ -23,6 +26,20 @@ export default function ProductItemList({ product }) {
       <p>{product.description}</p>
       <div className="buttonList">
         <AddToCartButton product={product} />
+        {user && false && (
+          <Link
+            href={{
+              pathname: "/update",
+              query: {
+                id: product.id,
+              },
+            }}
+          >
+            Editar ✏️
+          </Link>
+        )}
+
+        {/*<DeleteProduct id={product.id}>Delete</DeleteProduct>*/}
       </div>
     </ItemStyles>
   );
