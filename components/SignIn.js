@@ -56,7 +56,7 @@ export default function SignIn() {
     <Form method="POST" onSubmit={handleSubmit}>
       <h2>Sign Into Your Account</h2>
       <Error error={error} />
-      <fieldset>
+      <fieldset disabled={loading} aria-busy={loading}>
         <label htmlFor="email">
           Email
           <input
@@ -79,7 +79,14 @@ export default function SignIn() {
             onChange={handleChange}
           />
         </label>
-        <button type="submit">Sign In!</button>
+        <button
+          type="submit"
+          style={{
+            cursor: "pointer",
+          }}
+        >
+          Sign In!
+        </button>
       </fieldset>
     </Form>
   );
